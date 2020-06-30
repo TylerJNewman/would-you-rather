@@ -10,6 +10,8 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import { signIn } from "../actions/authedUser";
+import { useDispatch } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -33,11 +35,19 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
-  const [user, setUser] = React.useState("");
+  const [userId, setUser] = React.useState("");
 
-  const handleChange = (event) => {
-    setUser(event.target.value);
+  const handleChange = (_, newValue) => {
+    let selectedUserId = newValue.id;
+    setUser(selectedUserId);
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(signIn(userId));
+  };
+
+  const dispatch = useDispatch();
 
   return (
     <Container component="main" maxWidth="xs">
@@ -50,33 +60,8 @@ export default function SignIn() {
           Sign in
         </Typography>
         <form className={classes.form} noValidate>
-          {/* <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          /> */}
           <Autocomplete
+            onChange={handleChange}
             options={USERS}
             getOptionLabel={(option) => option.name}
             style={{ width: "100%" }}
@@ -90,6 +75,7 @@ export default function SignIn() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={handleSubmit}
           >
             Sign In
           </Button>

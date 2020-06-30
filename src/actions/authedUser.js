@@ -6,3 +6,5 @@ export const setAuthedUser = (id) => {
     id,
   };
 };
+
+export const signIn = (id) => setAuthedUser(id);
